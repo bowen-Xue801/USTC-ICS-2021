@@ -1,3 +1,4 @@
 *.md
 images
 !README.md
+*.log
