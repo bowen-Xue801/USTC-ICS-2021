@@ -357,7 +357,7 @@ int assembler::assemble(std::string input_filename, std::string output_filename)
                 line_stringstream >> num_temp;
                 if (num_temp < 1 || num_temp > 65535)
                 {
-                    // @ Error block width @ BLWK
+                    // @ Error block width @ BLKW
                     return -7;
                 }
                 line_address += num_temp;
