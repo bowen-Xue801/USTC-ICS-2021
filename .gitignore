@@ -2,3 +2,5 @@
 images
 !README.md
 *.log
+.vscode
+.vs
