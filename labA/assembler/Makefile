@@ -14,5 +14,5 @@ all: assembler
 .PHONY: clean
 
 clean:
-	rm -rf assembler
-	rm *.o
+	del assembler.exe
+	del *.o

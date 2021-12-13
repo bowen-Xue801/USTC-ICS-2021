@@ -58,27 +58,49 @@ const std::vector<std::string> kLC3TrapRoutine({
     "HALT"   // x25
 });
 
-enum StringType { sComment, sLabel, sValue, sOpcode, sOprand, sError };
-enum ValueType { vAddress, vValue };
-enum LineStatusType { lPending = -1, lComment, lOperation, lPseudo };
+enum StringType
+{
+    sComment,
+    sLabel,
+    sValue,
+    sOpcode,
+    sOprand,
+    sError
+};
+enum ValueType
+{
+    vAddress,
+    vValue
+};
+enum LineStatusType
+{
+    lPending = -1,
+    lComment,
+    lOperation,
+    lPseudo
+};
 
 typedef std::pair<std::string, StringType> token_tp;
-inline void SetDebugMode(bool debug) {
+inline void SetDebugMode(bool debug)
+{
     gIsDebugMode = debug;
 }
-inline void SetErrorLogMode(bool error) {
+inline void SetErrorLogMode(bool error)
+{
     gIsErrorLogMode = error;
 }
-inline void SetHexMode(bool hex) {
+inline void SetHexMode(bool hex)
+{
     gIsHexMode = hex;
 }
 
-class value_tp {
-    private:
+class value_tp
+{
+private:
     ValueType type_;
     int val_;
 
-    public:
+public:
     value_tp(ValueType type, int val) : type_(type), val_(val) {}
     value_tp(int val) : type_(vValue), val_(val) {}
     value_tp() : type_(ValueType::vValue), val_(0) {}
@@ -91,11 +113,12 @@ class value_tp {
     friend std::ostream &operator<<(std::ostream &os, const value_tp &value);
 };
 
-class label_map_tp {
-    private:
+class label_map_tp
+{
+private:
     std::map<std::string, value_tp> labels_;
 
-    public:
+public:
     ~label_map_tp() {}
     void AddLabel(const std::string &str, const value_tp &val);
     // void AddLabel(std::string str, std::string val);
@@ -104,26 +127,34 @@ class label_map_tp {
 };
 
 // trim from left
-inline std::string &LeftTrim(std::string &s, const char *t = " \t\n\r\f\v") {
-    // TO BE DONE
+inline std::string &LeftTrim(std::string &s, const char *t = " \t\n\r\f\v")
+{
+    // TO BE DONE (DONE)
+    s.erase(0, s.find_first_not_of(t));
     return s;
 }
 
 // trim from right
-inline std::string &RightTrim(std::string &s, const char *t = " \t\n\r\f\v") {
-    // TO BE DONE
+inline std::string &RightTrim(std::string &s, const char *t = " \t\n\r\f\v")
+{
+    // TO BE DONE (DONE)
+    s.erase(s.find_last_not_of(t) + 1);
     return s;
 }
 
 // trim from left & right
-inline std::string &Trim(std::string &s, const char *t = " \t\n\r\f\v") {
+inline std::string &Trim(std::string &s, const char *t = " \t\n\r\f\v")
+{
     return LeftTrim(RightTrim(s, t), t);
 }
 
-inline int IsLC3Command(const std::string &str) {
+inline int IsLC3Command(const std::string &str)
+{
     int index = 0;
-    for (auto command : kLC3Commands) {
-        if (str == command) {
+    for (auto command : kLC3Commands)
+    {
+        if (str == command)
+        {
             return index;
         }
         ++index;
@@ -131,10 +162,13 @@ inline int IsLC3Command(const std::string &str) {
     return -1;
 }
 
-inline int IsLC3TrapRoutine(const std::string &str) {
+inline int IsLC3TrapRoutine(const std::string &str)
+{
     int index = 0;
-    for (auto trap : kLC3TrapRoutine) {
-        if (str == trap) {
+    for (auto trap : kLC3TrapRoutine)
+    {
+        if (str == trap)
+        {
             return index;
         }
         ++index;
@@ -142,20 +176,27 @@ inline int IsLC3TrapRoutine(const std::string &str) {
     return -1;
 }
 
-inline int CharToDec(const char &ch) {
-    if (ch >= '0' && ch <= '9') {
+inline int CharToDec(const char &ch)
+{
+    if (ch >= '0' && ch <= '9')
+    {
         return ch - '0';
     }
-    if (ch >= 'A' && ch <= 'F') {
+    if (ch >= 'A' && ch <= 'F')
+    {
         return ch - 'A' + 10;
     }
     return -1;
 }
 
-inline char DecToChar(const int &num) {
-    if (num <= 9) {
+inline char DecToChar(const int &num)
+{
+    if (num <= 9)
+    {
         return num + '0';
-    } else {
+    }
+    else
+    {
         return num - 10 + 'A';
     }
     return -1;
@@ -167,11 +208,12 @@ std::string NumberToAssemble(const std::string &number);
 
 std::string ConvertBin2Hex(std::string bin);
 
-class assembler {
+class assembler
+{
 private:
-label_map_tp label_map;
-std::string TranslateOprand(int current_address, std::string str, int opcode_length = 3);
+    label_map_tp label_map;
+    std::string TranslateOprand(int current_address, std::string str, int opcode_length = 3);
 
 public:
-int assemble(std::string input_filename, std::string output_filename);
+    int assemble(std::string input_filename, std::string output_filename);
 };
