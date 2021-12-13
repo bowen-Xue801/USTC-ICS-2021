@@ -480,12 +480,12 @@ int assembler::assemble(std::string input_filename, std::string output_filename)
         output_filename = input_filename;
         if (output_filename.substr(1).find(".") == std::string::npos)
         {
-            output_filename = output_filename + ".asm";
+            output_filename = output_filename + (gIsHexMode ? ".hex" : ".bin");
         }
         else
         {
             output_filename = output_filename.substr(0, output_filename.rfind("."));
-            output_filename = output_filename + ".asm";
+            output_filename = output_filename + (gIsHexMode ? ".hex" : ".bin");
         }
     }
 
