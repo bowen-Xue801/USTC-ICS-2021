@@ -60,7 +60,8 @@ int main(int argc, char **argv) {
     int time_flag = 0;
     while(halt_flag) {
         // Single step
-        // TO BE DONEd
+        // TO BE DONE (DONE)
+        halt_flag = (virtual_machine.NextStep() != 0);
         if (gIsDetailedMode)
             std::cout << virtual_machine.reg << std::endl;
         ++time_flag;
@@ -68,5 +69,6 @@ int main(int argc, char **argv) {
 
     std::cout << virtual_machine.reg << std::endl;
     std::cout << "cycle = " << time_flag << std::endl;
+
     return 0;
 }

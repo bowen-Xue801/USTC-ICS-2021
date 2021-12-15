@@ -11,12 +11,26 @@ namespace virtual_machine_nsp {
 template <typename T, unsigned B>
 inline T SignExtend(const T x) {
     // Extend the number
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    T ret = x;
+    T mask = 1 << (B - 1);
+    if (mask & x) 
+    {
+        while (mask)
+        {
+            ret |= mask;
+            mask <<= 1;
+        }
+    }
+    return ret;
 }
 
 void virtual_machine_tp::UpdateCondRegister(int regname) {
     // Update the condition register
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    if (reg[regname] == 0) reg[R_COND] = 2;
+    else if (reg[regname] > 0) reg[R_COND] = 1;
+    else reg[R_COND] = 4;
 }
 
 void virtual_machine_tp::VM_ADD(int16_t inst) {
@@ -37,7 +51,22 @@ void virtual_machine_tp::VM_ADD(int16_t inst) {
 }
 
 void virtual_machine_tp::VM_AND(int16_t inst) {
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    int flag = inst & 0b100000;
+    int dr = (inst >> 9) & 0x7;
+    int sr1 = (inst >> 6) & 0x7;
+    if (flag) {
+        // add inst number
+        int16_t imm = SignExtend<int16_t, 5>(inst & 0b11111);
+        reg[dr] = reg[sr1] & imm;
+    }
+    else {
+        // add register
+        int sr2 = inst & 0x7;
+        reg[dr] = reg[sr1] & reg[sr2];
+    }
+    // Update condition register
+    UpdateCondRegister(dr);
 }
 
 void virtual_machine_tp::VM_BR(int16_t inst) {
@@ -53,11 +82,19 @@ void virtual_machine_tp::VM_BR(int16_t inst) {
 }
 
 void virtual_machine_tp::VM_JMP(int16_t inst) {
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    reg[R_PC] = reg[(inst >> 6) & 0x7];
 }
 
 void virtual_machine_tp::VM_JSR(int16_t inst) {
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    int flag = inst & 0x800;
+    int16_t temp = reg[R_PC];
+    if (flag)
+        reg[R_PC] += SignExtend<int16_t, 11>(inst & 0x7FF);
+    else
+        reg[R_PC] = reg[(inst >> 6) & 0x7];
+    reg[R_R7] = temp;
 }
 
 void virtual_machine_tp::VM_LD(int16_t inst) {
@@ -68,19 +105,35 @@ void virtual_machine_tp::VM_LD(int16_t inst) {
 }
 
 void virtual_machine_tp::VM_LDI(int16_t inst) {
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    int dr = (inst >> 9) & 0x7;
+    int16_t pc_offset = SignExtend<int16_t, 9>(inst & 0x1FF);
+    reg[dr] = mem[mem[reg[R_PC] + pc_offset]];
+    UpdateCondRegister(dr);
 }
 
 void virtual_machine_tp::VM_LDR(int16_t inst) {
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    int dr = (inst >> 9) & 0x7;
+    int base = (inst >> 6) & 0x7;
+    int16_t offset = SignExtend<int16_t, 6>(inst & 0x3F);
+    reg[dr] = mem[reg[base] + offset];
+    UpdateCondRegister(dr);
 }
 
 void virtual_machine_tp::VM_LEA(int16_t inst) {
-    // TO BE DONE
+    // TO BE DONE(DONE)
+    int dr = (inst >> 9) & 0x7;
+    int16_t pc_offset = SignExtend<int16_t, 9>(inst & 0x1FF);
+    reg[dr] = reg[R_PC] + pc_offset;
 }
 
 void virtual_machine_tp::VM_NOT(int16_t inst) {
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    int dr = (inst >> 9) & 0x7;
+    int sr = (inst >> 6) & 0x7;
+    reg[dr] = ~reg[sr];
+    UpdateCondRegister(dr);
 }
 
 void virtual_machine_tp::VM_RTI(int16_t inst) {
@@ -88,15 +141,25 @@ void virtual_machine_tp::VM_RTI(int16_t inst) {
 }
 
 void virtual_machine_tp::VM_ST(int16_t inst) {
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    int sr = (inst >> 9) & 0x7;
+    int16_t pc_offset = SignExtend<int16_t, 9>(inst & 0x1FF);
+    mem[reg[R_PC] + pc_offset] = reg[sr];
 }
 
 void virtual_machine_tp::VM_STI(int16_t inst) {
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    int sr = (inst >> 9) & 0x7;
+    int16_t pc_offset = SignExtend<int16_t, 9>(inst & 0x1FF);
+    mem[mem[reg[R_PC] + pc_offset]] = reg[sr];
 }
 
 void virtual_machine_tp::VM_STR(int16_t inst) {
-    // TO BE DONE
+    // TO BE DONE (DONE)
+    int sr = (inst >> 9) & 0x7;
+    int base = (inst >> 6) & 0x7;
+    int16_t offset = SignExtend<int16_t, 6>(inst & 0x3F);
+    mem[reg[base] + offset] = reg[sr];
 }
 
 void virtual_machine_tp::VM_TRAP(int16_t inst) {
@@ -152,48 +215,113 @@ int16_t virtual_machine_tp::NextStep() {
     
     switch (opcode) {
         case O_ADD:
-        if (gIsDetailedMode) {
-            std::cout << "ADD" << std::endl;
-        }
-        VM_ADD(current_instruct);
-        break;
+            if (gIsDetailedMode) {
+                std::cout << "ADD" << std::endl;
+            }
+            VM_ADD(current_instruct);
+            break;
         case O_AND:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "AND" << std::endl;
+            }
+            VM_AND(current_instruct);
+            break;
         case O_BR:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "BR" << std::endl;
+            }
+            VM_BR(current_instruct);
+            break;
         case O_JMP:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "JMP" << std::endl;
+            }
+            VM_JMP(current_instruct);
+            break;
         case O_JSR:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "JSR" << std::endl;
+            }
+            VM_JSR(current_instruct);
+            break;
         case O_LD:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "LD" << std::endl;
+            }
+            VM_LD(current_instruct);
+            break;
         case O_LDI:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "LDI" << std::endl;
+            }
+            VM_LDI(current_instruct);
+            break;
         case O_LDR:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "LDR" << std::endl;
+            }
+            VM_LDR(current_instruct);
+            break;
         case O_LEA:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "LEA" << std::endl;
+            }
+            VM_LEA(current_instruct);
+            break;
         case O_NOT:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "NOT" << std::endl;
+            }
+            VM_NOT(current_instruct);
+            break;
         case O_RTI:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "RTI" << std::endl;
+            }
+            VM_RTI(current_instruct);
+            break;
         case O_ST:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "ST" << std::endl;
+            }
+            VM_ST(current_instruct);
+            break;
         case O_STI:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "STI" << std::endl;
+            }
+            VM_STI(current_instruct);
+            break;
         case O_STR:
-        // TO BE DONE
+        // TO BE DONE (DONE)
+            if (gIsDetailedMode) {
+                std::cout << "STR" << std::endl;
+            }
+            VM_STR(current_instruct);
+            break;
         case O_TRAP:
-        if (gIsDetailedMode) {
-            std::cout << "TRAP" << std::endl;
-        }
-        if ((current_instruct & 0xFF) == 0x25) {
-            reg[R_PC] = 0;
-        }
-        VM_TRAP(current_instruct);
-        break;
+            if (gIsDetailedMode) {
+                std::cout << "TRAP" << std::endl;
+            }
+            if ((current_instruct & 0xFF) == 0x25) {
+                reg[R_PC] = 0;
+            }
+            VM_TRAP(current_instruct);
+            break;
         default:
-        VM_RTI(current_instruct);
+            VM_RTI(current_instruct);
         break;       
     }
 

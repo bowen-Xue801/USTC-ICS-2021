@@ -11,16 +11,25 @@
 namespace virtual_machine_nsp {
     void memory_tp::ReadMemoryFromFile(std::string filename, int beginning_address) {
         // Read from the file
-        // TO BE DONE
+        // TO BE DONE (DONE)
+        std::ifstream file(filename);
+        std::string line;
+        int address = beginning_address;
+        while (std::getline(file, line))
+        {
+            memory[address++] = TranslateInstruction(line);
+        }
     }
 
     int16_t memory_tp::GetContent(int address) const {
         // get the content
-        // TO BE DONE
+        // TO BE DONE (DONE)
+        return memory[address];
     }
 
     int16_t& memory_tp::operator[](int address) {
         // get the content
-        // TO BE DONE
+        // TO BE DONE (DONE)
+        return memory[address];
     }    
 }; // virtual machine namespace

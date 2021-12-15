@@ -19,6 +19,7 @@
 #include <string>
 #include <cstring>
 #include <algorithm>
+#include <bitset>
 
 // Boost library
 #include <boost/program_options.hpp>

@@ -1,0 +1,6 @@
+# ninja log v5
+14	3213	6611777745233769	CMakeFiles/lc3simulator.dir/src/memory.cpp.obj	d7974bf9a0cab13f
+44	3317	6611777746303959	CMakeFiles/lc3simulator.dir/src/simulator.cpp.obj	ebaacffd01ca236e
+30	3296	6611777746083767	CMakeFiles/lc3simulator.dir/src/register.cpp.obj	de44dadd8218f0a1
+259	5014	6611809086178472	CMakeFiles/lc3simulator.dir/src/main.cpp.obj	71b1367aca7b66a3
+19	680	6611815107494207	lc3simulator.exe	5d1acc4ee3eca509

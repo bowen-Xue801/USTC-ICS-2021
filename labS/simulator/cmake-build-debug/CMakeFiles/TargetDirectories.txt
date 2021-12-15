@@ -1,0 +1,3 @@
+D:/Code/ICS/pb20000051_ics/labS/simulator/cmake-build-debug/CMakeFiles/lc3simulator.dir
+D:/Code/ICS/pb20000051_ics/labS/simulator/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Code/ICS/pb20000051_ics/labS/simulator/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,4 @@
+ToolSet: w64 10.0 (local)@D:\msys64\mingw64
+Options: 
+
+Options:-DCMAKE_MAKE_PROGRAM=D:/Program Files/JetBrains/apps/CLion/ch-0/213.5744.254/bin/ninja/win/ninja.exe
