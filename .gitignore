@@ -4,3 +4,5 @@ images
 *.log
 .vscode
 .vs
+.idea
+test
