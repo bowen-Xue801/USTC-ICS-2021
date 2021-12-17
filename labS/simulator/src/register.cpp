@@ -22,4 +22,18 @@ namespace virtual_machine_nsp {
         os << "\e[1mPC\e[0m = " << std::hex << reg[R_PC] << std::endl;
         return os;
     }
+
+    std::ofstream& operator<<(std::ofstream& os, const register_tp& reg) {
+        os << std::dec << reg[R_R0] << std::endl;
+        os << std::dec << reg[R_R1] << std::endl;
+        os << std::dec << reg[R_R2] << std::endl;
+        os << std::dec << reg[R_R3] << std::endl;
+        os << std::dec << reg[R_R4] << std::endl;
+        os << std::dec << reg[R_R5] << std::endl;
+        os << std::dec << reg[R_R6] << std::endl;
+        os << std::dec << reg[R_R7] << std::endl;
+        os << std::bitset<3>(reg[R_COND]) << std::endl;
+        os << std::dec << reg[R_PC];
+        return os;
+    }
 } // virtual machine namespace

@@ -12,6 +12,7 @@ namespace po = boost::program_options;
 
 bool gIsSingleStepMode = false;
 bool gIsDetailedMode = false;
+bool gIsOutputMode = false;
 std::string gInputFileName = "input.txt";
 std::string gRegisterStatusFileName = "register.txt";
 std::string gOutputFileName = "";
@@ -50,6 +51,7 @@ int main(int argc, char **argv) {
     }
     if (vm.count("output")) {
         gOutputFileName = vm["output"].as<std::string>();
+        gIsOutputMode = true;
     }
     if (vm.count("detail")) {
         gIsDetailedMode = true;
@@ -70,5 +72,10 @@ int main(int argc, char **argv) {
     std::cout << virtual_machine.reg << std::endl;
     std::cout << "cycle = " << time_flag << std::endl;
 
+    if (gIsOutputMode) {
+        std::ofstream outfile(gOutputFileName);
+        outfile << virtual_machine.reg << std::endl;
+        outfile << std::dec << time_flag << std::endl;
+    }
     return 0;
 }

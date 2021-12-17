@@ -25,4 +25,5 @@ namespace virtual_machine_nsp {
     
     typedef std::array<int16_t, kRegisterNumber> register_tp;
     std::ostream& operator<<(std::ostream& os, const register_tp& reg);
+    std::ofstream& operator<<(std::ofstream& os, const register_tp& reg);
 } // virtual machine namespace
