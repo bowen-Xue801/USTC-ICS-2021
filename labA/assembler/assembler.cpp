@@ -112,6 +112,7 @@ int RecognizeNumberValue(std::string s)
         }
         break;
     case 'X':
+    case 'x':
         try
         {
             val = std::stoi(s.substr(1), nullptr, 16);
