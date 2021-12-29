@@ -15,6 +15,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <limits>
 
 const int kLC3LineLength = 16;
 

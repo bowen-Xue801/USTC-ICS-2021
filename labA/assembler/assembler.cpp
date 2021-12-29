@@ -124,7 +124,7 @@ int RecognizeNumberValue(std::string s)
         }
         break;
     default:
-        val = std::numeric_limits<int>::max(); 
+        val = std::numeric_limits<int>::max();
         break;
     }
     return val;
@@ -354,8 +354,25 @@ int assembler::assemble(std::string input_filename, std::string output_filename)
             {
                 // TO BE DONE (DONE)
                 file_address[line_index] = line_address;
+                std::string word_size;
+                line_stringstream >> word_size;
                 int num_temp = 0;
-                line_stringstream >> num_temp;
+                if (word_size[0] == '#' || word_size[0] == 'x' || word_size[0] == 'X')
+                {
+                    num_temp = RecognizeNumberValue(word_size);
+                }
+                else
+                {
+                    try
+                    {
+                        num_temp = std::stoi(word_size);
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cerr << e.what() << "in RecognizeNumberValue(). It should be a dec, but stoi() can't convert it.\n";
+                        num_temp = std::numeric_limits<int>::max();
+                    }
+                }
                 if (num_temp < 1 || num_temp > 65535)
                 {
                     // @ Error block width @ BLKW
@@ -430,8 +447,25 @@ int assembler::assemble(std::string input_filename, std::string output_filename)
                 // modify line address
                 // TO BE DONE (DONE)
                 label_map.AddLabel(label_name, value_tp(vAddress, line_address - 1));
+                std::string word_size;
+                line_stringstream >> word_size;
                 int num_temp = 0;
-                line_stringstream >> num_temp;
+                if (word_size[0] == '#' || word_size[0] == 'x' || word_size[0] == 'X')
+                {
+                    num_temp = RecognizeNumberValue(word_size);
+                }
+                else
+                {
+                    try
+                    {
+                        num_temp = std::stoi(word_size);
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cerr << e.what() << "in RecognizeNumberValue(). It should be a dec, but stoi() can't convert it.\n";
+                        num_temp = std::numeric_limits<int>::max();
+                    }
+                }
                 if (num_temp < 1 || num_temp > 65535)
                 {
                     // @ Error block width @ BLWK
@@ -537,9 +571,26 @@ int assembler::assemble(std::string input_filename, std::string output_filename)
             {
                 // Fill 0 here
                 // TO BE DONE (DONE)
-                int num_temp = 0;
                 std::string number_str = gIsHexMode ? "0000" : "0000000000000000";
-                line_stringstream >> num_temp;
+                std::string word_size;
+                line_stringstream >> word_size;
+                int num_temp = 0;
+                if (word_size[0] == '#' || word_size[0] == 'x' || word_size[0] == 'X')
+                {
+                    num_temp = RecognizeNumberValue(word_size);
+                }
+                else
+                {
+                    try
+                    {
+                        num_temp = std::stoi(word_size);
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cerr << e.what() << "in RecognizeNumberValue(). It should be a dec, but stoi() can't convert it.\n";
+                        num_temp = std::numeric_limits<int>::max();
+                    }
+                }
                 for (int i = 0; i < num_temp; ++i)
                 {
                     output_file << number_str << std::endl;
