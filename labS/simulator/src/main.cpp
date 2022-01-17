@@ -64,9 +64,14 @@ int main(int argc, char **argv) {
         // Single step
         // TO BE DONE (DONE)
         halt_flag = (virtual_machine.NextStep() != 0);
+        ++time_flag;
+        if (gIsSingleStepMode) 
+        {
+            std::cout << virtual_machine.reg << std::endl;
+            std::cin.get();
+        }
         if (gIsDetailedMode)
             std::cout << virtual_machine.reg << std::endl;
-        ++time_flag;
     }
 
     std::cout << virtual_machine.reg << std::endl;
