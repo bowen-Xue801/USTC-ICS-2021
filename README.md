@@ -6,5 +6,5 @@
 
 实验要求详见 [ics2021](https://git.lug.ustc.edu.cn/Chivier/ics2021).
 
-本人对于此次课程的评价详见 []().
+本人对于此次课程的评价详见 [USTC评课社区](https://icourse.club/course/20775/#review-43874).
 
